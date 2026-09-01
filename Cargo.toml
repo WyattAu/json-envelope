@@ -6,6 +6,8 @@ rust-version = "1.85"
 description = "Standard API response envelope — ApiResponse<T>, ApiError, PaginationMeta with IntoResponse"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/WyattAu/json-envelope"
+keywords = ["json", "api", "response"]
+categories = ["web-programming"]
 exclude = ["/target"]
 
 [dependencies]
