@@ -1,4 +1,5 @@
 use serde::Serialize;
+use crate::error::ApiError;
 
 /// Standard API response envelope.
 #[derive(Debug, Clone, Serialize)]
@@ -36,7 +37,7 @@ impl<T: Serialize> ApiResponse<T> {
     }
 
     /// Create a paginated response.
-    pub fn paginated(data: Vec<T>, meta: PaginationMeta) -> Self {
+    pub fn paginated(data: T, meta: PaginationMeta) -> Self {
         Self { success: true, data: Some(data), error: None, pagination: Some(meta) }
     }
 }
