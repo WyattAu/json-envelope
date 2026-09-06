@@ -1,5 +1,6 @@
-use serde::Serialize;
 use crate::error::ApiError;
+use alloc::string::ToString;
+use serde::Serialize;
 
 /// Standard API response envelope.
 #[derive(Debug, Clone, Serialize)]
@@ -33,19 +34,38 @@ pub struct PaginationMeta {
 impl<T: Serialize> ApiResponse<T> {
     /// Create a successful response with data.
     pub fn success(data: T) -> Self {
-        Self { success: true, data: Some(data), error: None, pagination: None }
+        Self {
+            success: true,
+            data: Some(data),
+            error: None,
+            pagination: None,
+        }
     }
 
     /// Create a paginated response.
     pub fn paginated(data: T, meta: PaginationMeta) -> Self {
-        Self { success: true, data: Some(data), error: None, pagination: Some(meta) }
+        Self {
+            success: true,
+            data: Some(data),
+            error: None,
+            pagination: Some(meta),
+        }
     }
 }
 
 impl ApiResponse<()> {
     /// Create an error response.
     pub fn error(code: &str, message: &str) -> Self {
-        Self { success: false, data: None, error: Some(ApiError { code: code.to_string(), message: message.to_string(), details: None }), pagination: None }
+        Self {
+            success: false,
+            data: None,
+            error: Some(ApiError {
+                code: code.to_string(),
+                message: message.to_string(),
+                details: None,
+            }),
+            pagination: None,
+        }
     }
 }
 
@@ -59,6 +79,10 @@ impl<T: Serialize> From<T> for ApiResponse<T> {
 impl<T: Serialize> axum::response::IntoResponse for ApiResponse<T> {
     fn into_response(self) -> axum::response::Response {
         let status = if self.success { 200 } else { 400 };
-        (axum::http::StatusCode::from_u16(status).unwrap(), axum::Json(self)).into_response()
+        (
+            axum::http::StatusCode::from_u16(status).unwrap(),
+            axum::Json(self),
+        )
+            .into_response()
     }
 }

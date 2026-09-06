@@ -1,5 +1,5 @@
-use proptest::prelude::*;
 use json_envelope::{ApiResponse, PaginationMeta};
+use proptest::prelude::*;
 
 proptest! {
     #[test]

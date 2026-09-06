@@ -11,15 +11,20 @@ categories = ["web-programming"]
 exclude = ["/target"]
 
 [dependencies]
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-thiserror = "2"
-http = "1"
+serde = { version = "1", default-features = false, features = ["alloc", "derive"] }
+serde_json = { version = "1", default-features = false, features = ["alloc"] }
+axum = { version = "0.8", optional = true, default-features = false, features = ["json"] }
+
+[features]
+default = []
+# Axum IntoResponse adapter (std-bound by nature of axum).
+axum = ["dep:axum"]
 
 [dev-dependencies]
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 proptest = "1"
 criterion = { version = "0.5", features = ["html_reports"] }
+serde_json = "1"
 
 [lints.rust]
 unsafe_code = "forbid"

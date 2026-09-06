@@ -1,6 +1,5 @@
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 use json_envelope::{ApiResponse, PaginationMeta};
-use serde_json;
 
 fn bench_api_response_success(c: &mut Criterion) {
     c.bench_function("api_response_success", |b| {
