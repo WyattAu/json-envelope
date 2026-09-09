@@ -1,3 +1,6 @@
+// Property tests assert invariants directly; unwraps keep failures loud.
+#![allow(clippy::unwrap_used, clippy::expect_used)]
+
 //! Shim validation: everything historically importable from `json-envelope`
 //! still resolves through the `api-types` re-export, using the migrated
 //! constructors (`error_with` replaces `error(code, message)`).
