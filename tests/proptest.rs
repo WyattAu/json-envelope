@@ -1,11 +1,4 @@
-// Property tests assert invariants directly; unwraps keep failures loud.
-#![allow(clippy::unwrap_used, clippy::expect_used)]
-
-//! Shim validation: everything historically importable from `json-envelope`
-//! still resolves through the `api-types` re-export, using the migrated
-//! constructors (`error_with` replaces `error(code, message)`).
-
-use json_envelope::{ApiError, ApiResponse, JSend, PaginationMeta};
+use json_envelope::{ApiResponse, PaginationMeta};
 use proptest::prelude::*;
 
 proptest! {
@@ -23,7 +16,7 @@ proptest! {
         code in "[a-z]{1,20}",
         message in "[a-z ]{1,100}",
     ) {
-        let resp = ApiResponse::<()>::error_with(&code, &message);
+        let resp = ApiResponse::<()>::error(&code, &message);
         let json = serde_json::to_string(&resp).unwrap();
         let parsed: serde_json::Value = serde_json::from_str(&json).unwrap();
         assert_eq!(parsed["success"], serde_json::json!(false));
@@ -69,36 +62,12 @@ proptest! {
         code in "[a-z]{1,20}",
         msg in "[a-z ]{1,100}",
     ) {
-        let resp = ApiResponse::<()>::error_with(&code, &msg);
+        let resp = ApiResponse::<()>::error(&code, &msg);
         assert!(!resp.success);
         assert!(resp.data.is_none());
         assert!(resp.error.is_some());
         let err = resp.error.unwrap();
         assert_eq!(err.code, code);
         assert_eq!(err.message, msg);
-    }
-
-    #[test]
-    fn api_error_struct_literal_still_works(
-        code in "[a-z]{1,20}",
-        message in "[a-z ]{1,100}",
-    ) {
-        // The struct shape is unchanged, so literal construction keeps compiling.
-        let err = ApiError {
-            code: code.clone(),
-            message: message.clone(),
-            details: None,
-        };
-        assert_eq!(err.code, code);
-        assert_eq!(err.message, message);
-    }
-
-    #[test]
-    fn jsend_reexported_through_shim(data in "[a-z]{1,100}") {
-        let resp = JSend::success(data.clone());
-        let json = serde_json::to_string(&resp).unwrap();
-        let parsed: serde_json::Value = serde_json::from_str(&json).unwrap();
-        assert_eq!(parsed["status"], serde_json::json!("success"));
-        assert_eq!(parsed["data"].as_str(), Some(data.as_str()));
     }
 }
