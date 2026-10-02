@@ -32,3 +32,6 @@ unsafe_code = "forbid"
 [[bench]]
 name = "envelope_bench"
 harness = false
+
+[package.metadata.layers]
+tier = "L0"
