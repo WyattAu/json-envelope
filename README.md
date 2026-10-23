@@ -1,4 +1,5 @@
 # json-envelope
+[![Estate integration](https://github.com/WyattAu/estate-integration/actions/workflows/ci.yml/badge.svg)](https://github.com/WyattAu/estate-integration/actions/workflows/ci.yml)
 
 > Standard API response envelope for Rust services.
 
