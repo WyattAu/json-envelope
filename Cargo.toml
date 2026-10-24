@@ -1,9 +1,9 @@
 [package]
 name = "json-envelope"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 rust-version = "1.85"
-description = "Standard API response envelope: ApiResponse<T>, ApiError, PaginationMeta with IntoResponse"
+description = "Standard API response envelope for Rust services"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/WyattAu/json-envelope"
 keywords = ["json", "api", "response", "envelope", "serde"]
