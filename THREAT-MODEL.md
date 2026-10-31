@@ -1,11 +1,11 @@
-# Threat Model — json-envelope
+# Threat Model: json-envelope
 
 Reference: STRIDE. Scope: the crate's public API surface. Trust boundary:
 (1) bytes/inputs entering public constructors and parsers, (2) concurrent
-callers sharing interior state. json-envelope is an in-process library — it opens
+callers sharing interior state. json-envelope is an in-process library; it opens
 no sockets and inherits the embedding process's trust domain.
 
-Purpose: JSON API envelope (`json-envelope`) — `ApiResponse`, `ApiError`, `PaginationMeta` with serde roundtrip contract
+Purpose: JSON API envelope (`json-envelope`); `ApiResponse`, `ApiError`, `PaginationMeta` with serde roundtrip contract
 
 ## Assets
 

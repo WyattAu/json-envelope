@@ -1,9 +1,9 @@
-# Requirements — json-envelope
+# Requirements: json-envelope
 
 Numbered, testable requirements. Every requirement maps to at least one named
 test or doc-comment contract; security-relevant items cite threat-model rows.
 
-Scope: JSON API envelope (`json-envelope`) — `ApiResponse`, `ApiError`, `PaginationMeta` with serde roundtrip contract
+Scope: JSON API envelope (`json-envelope`); `ApiResponse`, `ApiError`, `PaginationMeta` with serde roundtrip contract
 
 ## Functional
 
