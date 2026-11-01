@@ -31,10 +31,10 @@ fn decode(input: &Value) -> Result<Value, String> {
             return Err("success:true with error object".into());
         }
         let e = err.as_object().ok_or("error: not an object")?;
-        if !e.get("code").map_or(false, |v| v.is_string()) {
+        if !e.get("code").is_some_and(|v| v.is_string()) {
             return Err("error.code: not a string".into());
         }
-        if !e.get("message").map_or(false, |v| v.is_string()) {
+        if !e.get("message").is_some_and(|v| v.is_string()) {
             return Err("error.message: not a string".into());
         }
     } else if !success {
@@ -51,11 +51,11 @@ fn decode(input: &Value) -> Result<Value, String> {
     if let Some(pag) = obj.get("pagination") {
         let p = pag.as_object().ok_or("pagination: not an object")?;
         for key in ["page", "per_page", "total_pages"] {
-            if !p.get(key).map_or(false, Value::is_number) {
+            if !p.get(key).is_some_and(Value::is_number) {
                 return Err(format!("pagination.{key}: not an integer"));
             }
         }
-        if !p.get("total").map_or(false, Value::is_number) {
+        if !p.get("total").is_some_and(Value::is_number) {
             return Err("pagination.total: not a number".into());
         }
         out.insert("pagination".into(), pag.clone());
@@ -82,10 +82,7 @@ fn conformance_fixtures_pass() {
                         });
                         let expected = &case["expected"];
                         if !expected.is_null() {
-                            assert_eq!(
-                                &env, expected,
-                                "case {name}: decoded shape diverged"
-                            );
+                            assert_eq!(&env, expected, "case {name}: decoded shape diverged");
                         }
                     }
                     Some("reject") => {
@@ -99,10 +96,7 @@ fn conformance_fixtures_pass() {
                 let env = if let Some(code) = construct.get("code") {
                     let mut err = serde_json::Map::new();
                     err.insert("code".into(), code.clone());
-                    err.insert(
-                        "message".into(),
-                        construct["message"].clone(),
-                    );
+                    err.insert("message".into(), construct["message"].clone());
                     serde_json::json!({ "success": false, "error": Value::Object(err) })
                 } else {
                     serde_json::json!({ "success": true, "data": construct["data"] })
@@ -120,12 +114,26 @@ fn api_response_wire_shape_is_snake_case() {
     use json_envelope::{ApiResponse, PaginationMeta};
     let env = ApiResponse::paginated(
         serde_json::json!([]),
-        PaginationMeta { page: 2, per_page: 50, total: 506, total_pages: 11 },
+        PaginationMeta {
+            page: 2,
+            per_page: 50,
+            total: 506,
+            total_pages: 11,
+        },
     );
     let json = serde_json::to_string(&env).unwrap();
-    assert!(json.contains("\"per_page\":50"), "wire key per_page missing: {json}");
-    assert!(json.contains("\"total_pages\":11"), "wire key total_pages missing: {json}");
-    assert!(!json.contains("perPage"), "camelCase leaked onto the wire: {json}");
+    assert!(
+        json.contains("\"per_page\":50"),
+        "wire key per_page missing: {json}"
+    );
+    assert!(
+        json.contains("\"total_pages\":11"),
+        "wire key total_pages missing: {json}"
+    );
+    assert!(
+        !json.contains("perPage"),
+        "camelCase leaked onto the wire: {json}"
+    );
 }
 
 #[test]
