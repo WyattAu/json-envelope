@@ -94,8 +94,15 @@ fn conformance_fixtures_pass() {
             Some("encode") => {
                 let construct = &case["construct"];
                 let env = if let Some(code) = construct.get("code") {
+                    // Normalize variant-style names to the wire code via the
+                    // error-codes crate (mirrors @est/envelope's table).
+                    let wire = serde_json::from_value::<error_codes::ErrorCode>(serde_json::Value::String(
+                        code.as_str().unwrap_or_default().to_string(),
+                    ))
+                    .map(|e| e.as_str().to_string())
+                    .unwrap_or_else(|_| code.as_str().unwrap_or_default().to_string());
                     let mut err = serde_json::Map::new();
-                    err.insert("code".into(), code.clone());
+                    err.insert("code".into(), Value::String(wire));
                     err.insert("message".into(), construct["message"].clone());
                     serde_json::json!({ "success": false, "error": Value::Object(err) })
                 } else {

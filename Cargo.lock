@@ -255,6 +255,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "error-codes"
+version = "1.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "56a241b5268fd0ce0bcdd5aca9b067e6a549d8216eb05c6aec907a919166c114"
+dependencies = [
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "fastrand"
 version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -406,6 +416,7 @@ version = "0.1.2"
 dependencies = [
  "axum",
  "criterion",
+ "error-codes",
  "proptest",
  "serde",
  "serde_json",
